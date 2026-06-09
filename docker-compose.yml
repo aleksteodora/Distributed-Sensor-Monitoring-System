@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: snusdb
+      POSTGRES_USER: snus
+      POSTGRES_PASSWORD: snuspassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U snus -d snusdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ingestion-service:
+    build:
+      context: .
+      dockerfile: IngestionService/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=snusdb;Username=snus;Password=snuspassword"
+      NotificationService__BaseUrl: "http://notification-service:5002"
+      ASPNETCORE_URLS: "http://+:5001"
+    ports:
+      - "5001:5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  consensus-service:
+    build:
+      context: .
+      dockerfile: ConsensusService/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=snusdb;Username=snus;Password=snuspassword"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ingestion-service:
+        condition: service_started
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: NotificationService/Dockerfile
+    environment:
+      ASPNETCORE_URLS: "http://+:5002"
+    ports:
+      - "5002:5002"
+
+  ingress:
+    build:
+      context: .
+      dockerfile: Ingress/Dockerfile
+    environment:
+      ASPNETCORE_URLS: "http://+:5000"
+      ReverseProxy__Clusters__ingestion-cluster__Destinations__ingestion__Address: "http://ingestion-service:5001"
+      ReverseProxy__Clusters__notification-cluster__Destinations__notification__Address: "http://notification-service:5002"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ingestion-service
+      - notification-service
+
+volumes:
+  pgdata:
