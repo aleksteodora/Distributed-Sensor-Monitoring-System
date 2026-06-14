@@ -20,8 +20,8 @@ Install the following before running the system:
 
 ```bash
 # 1. Clone the repository
-git clone <repo-url>
-cd snus-project
+git clone https://github.com/IgorMaljik/Distributed-Sensor-Monitoring-System
+cd Distributed-Sensor-Monitoring-System
 
 # 2. Start all services + PostgreSQL
 docker-compose up --build
@@ -108,7 +108,7 @@ dotnet ef database update
 ## Project Structure
 
 ```
-snus-project/
+Distributed-Sensor-Monitoring-System/
 ├── Shared/                  # DTOs, EF models, DbContext – shared across all services
 │   ├── DTOs/
 │   ├── Models/
