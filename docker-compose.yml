@@ -63,7 +63,7 @@ services:
       ReverseProxy__Clusters__ingestion-cluster__Destinations__ingestion__Address: "http://ingestion-service:5001"
       ReverseProxy__Clusters__notification-cluster__Destinations__notification__Address: "http://notification-service:5002"
     ports:
-      - "5000:5000"
+      - "5050:5000"
     depends_on:
       - ingestion-service
       - notification-service

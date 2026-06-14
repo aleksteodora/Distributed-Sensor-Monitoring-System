@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consensus-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consensus-service
+  template:
+    metadata:
+      labels:
+        app: consensus-service
+    spec:
+      containers:
+        - name: consensus-service
+          image: snus-project-consensus-service:latest
+          imagePullPolicy: Never
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: connection-string

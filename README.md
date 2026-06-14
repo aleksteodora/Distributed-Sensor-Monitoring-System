@@ -28,14 +28,35 @@ docker-compose up --build
 
 # 3. Run the sensors (in a separate terminal)
 cd SensorClient
-dotnet run -- http://localhost:5000
+dotnet run -- http://localhost:5050
 ```
 
 Services are available at:
-- **Ingress (single entry point):**   http://localhost:5000
+- **Ingress (single entry point):**   http://localhost:5050
 - **IngestionService (direct):**      http://localhost:5001
 - **NotificationService (direct):**   http://localhost:5002
 - **Swagger (IngestionService):**     http://localhost:5001/swagger
+
+---
+
+## Kubernetes (Minikube)
+
+```bash
+# 1. Start Minikube
+minikube start
+
+# 2. Build Docker images (if not already built)
+docker-compose build
+
+# 3. Deploy to Minikube
+chmod +x k8s/deploy.sh
+./k8s/deploy.sh
+
+# 4. Get the access URL
+minikube service ingress --url
+```
+
+> **Note:** On macOS with Docker driver, keep the terminal running `minikube service` open while using the system.
 
 ---
 
@@ -66,7 +87,7 @@ dotnet run
 
 # Terminal 6 – SensorClient
 cd SensorClient
-dotnet run -- http://localhost:5000
+dotnet run -- http://localhost:5000 # macOS: use 5050 if port 5000 is unavailable
 ```
 
 ---
