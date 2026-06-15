@@ -41,3 +41,4 @@ localhost.conf
 .config/dotnet-tools.json
 
 SensorClient/appsettings.json
+IngestionService/appsettings.json
