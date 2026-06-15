@@ -39,3 +39,5 @@ localhost.conf
 
 ## Dotnet tool manifest cache
 .config/dotnet-tools.json
+
+SensorClient/appsettings.json
