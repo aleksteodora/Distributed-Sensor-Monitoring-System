@@ -25,7 +25,7 @@ services:
       dockerfile: IngestionService/Dockerfile
     environment:
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=snusdb;Username=snus;Password=snuspassword"
-      NotificationService__BaseUrl: "http://notification-service:5002"
+      Services__NotificationService: "http://notification-service:5002"
       ASPNETCORE_URLS: "http://+:5001"
     ports:
       - "5001:5001"
